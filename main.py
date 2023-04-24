@@ -1,7 +1,7 @@
 def js_to_python(js_code_to_translate):
-    remove_reserved_words(js_code_to_translate)
-    change_comparison_operators(js_code_to_translate)
-    change_incremental_operators(js_code_to_translate)
+    js_code_to_translate = remove_reserved_words(js_code_to_translate)
+    js_code_to_translate = change_comparison_operators(js_code_to_translate)
+    js_code_to_translate = change_incremental_operators(js_code_to_translate)
 
     js_code_to_translate = 'def ' + js_code_to_translate.split('(', 1)[0].split()[-1] + '(' + \
                            js_code_to_translate.split('(', 1)[1]
@@ -13,18 +13,15 @@ def js_to_python(js_code_to_translate):
 
 
 def remove_reserved_words(code_to_translate):
-    variable_reserved_words = ['var', 'let', 'const']
-
     reserved_words = {
+        'var': '',
+        'let': '',
+        'const': '',
         'console.log': 'print',
         ';': '\n'
     }
 
-    for word in variable_reserved_words:
-        code_to_translate.replace(word, '')
-
-    for operator in reserved_words.keys():
-        code_to_translate.replace(operator, reserved_words[operator])
+    code_to_translate = iterate_replacing(code_to_translate, reserved_words)
     return code_to_translate
 
 
@@ -33,8 +30,7 @@ def change_comparison_operators(code_to_translate):
         '===': '==',
         '!==': '!='
     }
-    for operator in comparison_operators.keys():
-        code_to_translate.replace(operator, comparison_operators[operator])
+    code_to_translate = iterate_replacing(code_to_translate, comparison_operators)
     return code_to_translate
 
 
@@ -48,9 +44,14 @@ def change_incremental_operators(code_to_translate):
         '+=': '+= ',
         '-=': '-= ',
     }
-    for operator in comparison_operators.keys():
-        code_to_translate.replace(operator, comparison_operators[operator])
+    code_to_translate = iterate_replacing(code_to_translate, comparison_operators)
     return code_to_translate
+
+
+def iterate_replacing(word: str, dic: dict[str, str]) -> str:
+    for key in dic.keys():
+        word = word.replace(key, dic[key])
+    return word
 
 
 example1 = '''
@@ -61,10 +62,12 @@ greet("World");
 '''
 
 example2 = '''
+let a = 1;
+const b = 2;
 function sum(x, y) {
     console.log(x + y);
 }
-sum(2, 2);
+sum(a, b);
 '''
 
 example3 = '''
