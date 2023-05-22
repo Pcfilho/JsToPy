@@ -13,13 +13,16 @@ def js_to_python(js_code_to_translate):
 
 def translate_for_in(code_to_translate: str):
     isFor = code_to_translate.split('(', 1)[0].find('for')
+    reserved_words = {
+        'of': 'in',
+    }
 
-    print(code_to_translate.split('(', 1))
 
     if (isFor != -1):
+        code_to_translate = iterate_replacing(code_to_translate, reserved_words)
         code_to_translate = code_to_translate.split('(', 1)[0] + ' ' + \
                            code_to_translate.split('(', 1)[1]
-        
+        code_to_translate = code_to_translate.split(':', 2)[0].replace(')', '') + ': \n' + code_to_translate.split(':', 2)[1]
 
     return code_to_translate
 
@@ -30,9 +33,9 @@ def translate_function(code_to_translate: str):
 
 def remove_reserved_words(code_to_translate):
     reserved_words = {
-        'var': '',
-        'let': '',
-        'const': '',
+        'var ': '',
+        'let ': '',
+        'const ': '',
         'console.log': 'print',
         ';': '\n',
         'true': 'True'
@@ -108,15 +111,15 @@ while(true) {
 '''
 
 example5 = '''
-constarray = [1, 2, 3, 4];
+const array = [1, 2, 3, 4];
 
-for (n in array) {
-    console.log(array[n])
+for (n of array) {
+    console.log(n)
 }
 
 '''
 
-py_code = js_to_python(example5)
+py_code = js_to_python(example4)
 
 print(py_code)
 exec(py_code)
