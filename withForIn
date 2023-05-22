@@ -22,7 +22,7 @@ def translate_for_in(code_to_translate: str):
         code_to_translate = iterate_replacing(code_to_translate, reserved_words)
         code_to_translate = code_to_translate.split('(', 1)[0] + ' ' + \
                            code_to_translate.split('(', 1)[1]
-        code_to_translate = code_to_translate.split(':', 2)[0].replace(')', '') + ': \n' + code_to_translate.split(':', 2)[1]
+        code_to_translate = code_to_translate.split(':', 1)[0].replace(')', '') + ': \n' + code_to_translate.split(':', 1)[1]
 
     return code_to_translate
 
@@ -119,7 +119,7 @@ for (n of array) {
 
 '''
 
-py_code = js_to_python(example4)
+py_code = js_to_python(example5)
 
 print(py_code)
 exec(py_code)
